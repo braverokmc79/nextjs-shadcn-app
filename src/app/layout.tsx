@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {Noto_Sans_KR  , Poppins ,Geist } from "next/font/google";
+import  {cn} from "@/lib/utils";
+
 import "./globals.css";
+
+// 폰트 설정
+const notoSansKR = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400","500","600","700","800","900"], // 필요한 가중치 추가
+})
+
+const poppins=Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+})
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -23,12 +31,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="ko">
+      <body className={`
+            ${cn(notoSansKR.className, "dark")} 
+            ${cn(poppins.className, "dark")}
+            ${cn(geistSans.className, "dark")}
+            antialiased`
+        } > 
+         
+      {/* <body className={cn(notoSansKR.className, "dark")} >
+      */}
         {children}
       </body>
+
     </html>
   );
 }
