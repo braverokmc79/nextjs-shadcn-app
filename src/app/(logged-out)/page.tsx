@@ -8,8 +8,9 @@ const LandingPage:React.FC = () => {
   return(
   <>
    
-      <h1 className="flex gap-2 items-center">
-         <PersonStandingIcon  size={50}  className="text-pink-500"  />  SupportMe
+      <h1 className="flex gap-2 items-center text-white">
+         <PersonStandingIcon  size={50}  className="text-pink-500"  />  
+         SupportMe
       </h1>
       
       <p>고객 지원을 관리하는 최고의 대시보드</p>
