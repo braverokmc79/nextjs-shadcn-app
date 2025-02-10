@@ -8,7 +8,7 @@ const LandingPage:React.FC = () => {
   return(
   <>
    
-      <h1 className="flex gap-2 items-center text-white">
+      <h1  className="flex gap-2 items-center ">
          <PersonStandingIcon  size={50}  className="text-pink-500"  />  
          SupportMe
       </h1>
