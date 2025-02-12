@@ -53,8 +53,8 @@ const LoginPage: React.FC = () => {
       </div>
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader>
-          <CardTitle>로그인</CardTitle>
-          <CardDescription>SupportMe 계정에 로그인하세요.</CardDescription>
+          <CardTitle className="text-3xl">로그인</CardTitle>
+          <CardDescription>Macaronics.net 계정에 로그인하세요.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -70,7 +70,7 @@ const LoginPage: React.FC = () => {
                       <Input placeholder="example@email.com" {...field} />
                     </FormControl>
                     <FormDescription>
-                      SupportMe 계정의 이메일을 입력해주세요.
+                      Macaronics.net 계정의 이메일을 입력해주세요.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -88,7 +88,7 @@ const LoginPage: React.FC = () => {
                       <Input type="password" placeholder="비밀번호" {...field} />
                     </FormControl>
                     <FormDescription>
-                      SupportMe 계정의 비밀번호을 입력해주세요.
+                      Macaronics.net 계정의 비밀번호을 입력해주세요.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

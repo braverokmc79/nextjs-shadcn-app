@@ -7,7 +7,7 @@
 @tailwind utilities;
 
 body {
-  font-family:  "Noto Sans KR", "Nanum Gothic", "Pretendard",, Arial, Helvetica, sans-serif;
+  font-family:  "Noto Sans KR", "Nanum Gothic", "Pretendard", Arial, Helvetica, sans-serif;
 }
 
 @layer base {
