@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,13 +35,15 @@ import { Calendar } from "@/components/ui/custom_calendar";
 import { format } from "date-fns"
 import { ko } from "date-fns/locale";  // ✅ 한국어 로케일 추가
 
-// 폼 유효성 검사 스키마 정의
+
+
+//1.유효성 검사 기본 스키마 정의
 const formSchema = z.object({
   email: z.string().email("유효한 이메일을 입력하세요."),
   accountType: z.enum(["personal", "company"]),
   companyName: z.string().optional(),
   numberOfEmployees: z.coerce.number().optional(),
-  dob:z.date().refine((date)=>{
+  dob:z.date({ required_error: "생년월일을 선택해주세요." }).refine((date)=>{
     const today = new Date();
     const eighteedYearsAgo =new Date(
       today.getFullYear() - 18,
@@ -50,8 +51,13 @@ const formSchema = z.object({
       today.getDate()
     );
     return date <= eighteedYearsAgo;    
-  })
+  }, "18세 이상의 사람만 회원가입 가능합니다."),  
+  password: z.string({ required_error: "비밀번호를 입력해 주세요." }).min(8, "8자 이상 입력하세요.")
+  .refine((password) => {
+     return /^(?=.*[!@#$%^&*])(?=.*[A-Z]).*$/.test(password);
+  },"비밀번호는 특수문자 1개 이상, 대문자 1개 이상을 포함해야 합니다."),
 
+  passwordConfirm: z.string({ required_error: "비밀번호 확인을 입력해 주세요." }),
 }).superRefine((data, ctx) => {
  
   if(data.accountType === "company" && !data.companyName) {
@@ -70,14 +76,28 @@ const formSchema = z.object({
     });
   }
 
+  if(data.password !== data.passwordConfirm) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path:["passwordConfirm"],
+      message: "비밀번호와 비밀번호 확인은 일치해야 하겠습니다.",
+    });
+  }
 });
+
+
+
+
 
 const SignupPage: React.FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      accountType: "personal",   
+      accountType: "personal", 
+      dob: undefined,
+      password: "", 
+       
     },
   });
 
@@ -119,9 +139,9 @@ const SignupPage: React.FC = () => {
                     <FormControl>
                       <Input placeholder="example@email.com" {...field} />
                     </FormControl>
-                    <FormDescription>
+                    {/* <FormDescription>
                       Macaronics.net 계정의 이메일을 입력해주세요.
-                    </FormDescription>
+                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -227,6 +247,40 @@ const SignupPage: React.FC = () => {
                 )}
               />
        
+
+
+          {/* 비밀번호 필드 */}
+              <FormField
+                control={form.control}
+                
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>비밀번호</FormLabel>
+                    <FormControl>
+                      <Input placeholder="비밀번호" type="password" {...field} />
+                    </FormControl>                   
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+
+           {/* 비밀번호 확인 필드 */}
+            <FormField
+                control={form.control}                
+                name="passwordConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>비밀번호 확인</FormLabel>
+                    <FormControl>
+                      <Input placeholder="비밀번호 확인" type="password" {...field} />
+                    </FormControl>                   
+                    <FormMessage />
+                  </FormItem>
+                )}
+            />
+
 
 
 
