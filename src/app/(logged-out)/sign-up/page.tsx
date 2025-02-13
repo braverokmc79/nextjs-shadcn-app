@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PersonStandingIcon } from "lucide-react";
+import { CalendarIcon, PersonStandingIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -32,6 +31,10 @@ import {
   SelectContent,
   SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/custom_calendar";
+import { format } from "date-fns"
+import { ko } from "date-fns/locale";  // ✅ 한국어 로케일 추가
 
 // 폼 유효성 검사 스키마 정의
 const formSchema = z.object({
@@ -39,6 +42,16 @@ const formSchema = z.object({
   accountType: z.enum(["personal", "company"]),
   companyName: z.string().optional(),
   numberOfEmployees: z.coerce.number().optional(),
+  dob:z.date().refine((date)=>{
+    const today = new Date();
+    const eighteedYearsAgo =new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+    return date <= eighteedYearsAgo;    
+  })
+
 }).superRefine((data, ctx) => {
  
   if(data.accountType === "company" && !data.companyName) {
@@ -64,7 +77,7 @@ const SignupPage: React.FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      accountType: "personal",
+      accountType: "personal",   
     },
   });
 
@@ -76,7 +89,8 @@ const SignupPage: React.FC = () => {
 
   const accountType = form.watch("accountType");
 
-
+  const dobFromDate=new Date();
+  dobFromDate.setFullYear(dobFromDate.getFullYear() - 120);
 
 
   return (
@@ -167,12 +181,52 @@ const SignupPage: React.FC = () => {
                 </> 
               )}
               
-              {accountType === "personal" && (
-                <>
-                
-                  
-                </> 
-              )}
+
+              <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col pt-2">
+                    <FormLabel className="h-5" >생년월일</FormLabel>
+                    <FormControl>                     
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>                            
+                            <Button variant={"outline"}                      
+                              className="normal-case flex justify-between"                            
+                            >
+                        
+                          {field.value ? (format(field.value, "yyyy-MM-dd")) : (<span>날짜 선택</span>)}
+                      
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                       
+                        <PopoverContent  align="start" className="w-auto p-0 ">
+      
+                        <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => field.onChange(date ?? null)}
+                            fixedWeeks
+                            weekStartsOn={0}  // 주의 시작 요일을 '일요일(0)'로 변경
+                            fromMonth={dobFromDate}
+                            toDate={new Date()}
+                            captionLayout="dropdown-buttons"
+                            locale={ko}  // ✅ 한국어 적용
+                           
+                          /> 
+                        </PopoverContent>
+                      </Popover>
+
+
+                    </FormControl>                        
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+       
 
 
 
