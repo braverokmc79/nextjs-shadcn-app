@@ -34,6 +34,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/custom_calendar";
 import { format } from "date-fns"
 import { ko } from "date-fns/locale";  // ✅ 한국어 로케일 추가
+import { PasswordInput } from "@/components/ui/password-input";
 
 
 
@@ -97,7 +98,7 @@ const SignupPage: React.FC = () => {
       accountType: "personal", 
       dob: undefined,
       password: "", 
-       
+      passwordConfirm: "",
     },
   });
 
@@ -258,7 +259,8 @@ const SignupPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>비밀번호</FormLabel>
                     <FormControl>
-                      <Input placeholder="비밀번호" type="password" {...field} />
+                      {/* <Input placeholder="비밀번호" type="password" {...field} /> */}
+                      <PasswordInput  placeholder="비밀번호"  {...field} />
                     </FormControl>                   
                     <FormMessage />
                   </FormItem>
@@ -273,8 +275,8 @@ const SignupPage: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>비밀번호 확인</FormLabel>
-                    <FormControl>
-                      <Input placeholder="비밀번호 확인" type="password" {...field} />
+                    <FormControl>                      
+                      <PasswordInput  placeholder="비밀비밀번호 확인"  {...field} />
                     </FormControl>                   
                     <FormMessage />
                   </FormItem>

@@ -25,6 +25,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
 
 // 폼 유효성 검사 스키마 정의
 const formSchema = z.object({
@@ -85,7 +86,7 @@ const LoginPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>비밀번호</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="비밀번호" {...field} />
+                      <PasswordInput  placeholder="비밀번호"  {...field} />
                     </FormControl>
                     <FormDescription>
                       Macaronics.net 계정의 비밀번호을 입력해주세요.
