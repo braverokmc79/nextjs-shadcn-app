@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";;
 import { cookies } from "next/headers"; 
 
 import "./globals.css";
+import Providers from "./provders";
 
 // 폰트 설정
 const notoSansKR = Noto_Sans_KR({
@@ -38,8 +39,10 @@ export default async function RootLayout({
    const darkModeCookie = (await cookies()).get("dark-mode")?.value;
    const isDarkMode = darkModeCookie === "true"; 
  
+   //hydration: 이 과정에서는 ‘client’로 랜더링 된다.
+   //hydration mismatch 상황이지만 suppressHydrationWarning로 그 에러가 무시된다.
   return (
-    <html lang="ko" >
+    <html lang="ko"  suppressHydrationWarning>
       <body
         className={cn(
           `antialiased,
@@ -49,7 +52,9 @@ export default async function RootLayout({
           ${isDarkMode ? "dark" : ""}
         `)}
       >
-        {children}
+        <Providers>
+             {children}
+        </Providers>
       </body>
     </html>
   );

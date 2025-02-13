@@ -1,3 +1,4 @@
+import ThemeToggle from "@/components/ThemeToggle";
 import LightDarkToggle from "@/components/ui/light-dark-toggle";
 import React from "react";
 
@@ -11,6 +12,11 @@ const LoggedOutLayout: React.FC<LoggedOutLayoutProps> = ({ children }) => {
      {children}
      {/* <LightDarkToggle className="fixed top-1/2 right-2 -mt-4" /> */}
      <LightDarkToggle className="fixed top-[calc(50%-12px)] right-2 " />
+
+     <div className="fixed top-[calc(50%-102px)] right-2">
+         <ThemeToggle />
+     </div>
+
     </div>;
 };
 

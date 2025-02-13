@@ -25,14 +25,27 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
   {
     variants: {
       variant: {
         default: "border bg-background text-foreground",
-        destructive:
-          "destructive group border-destructive bg-destructive text-destructive-foreground",
+        destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
+        primary: "primary group border-blue-600 bg-blue-500 text-white",
+        secondary: "secondary group border-gray-500 bg-gray-400 text-white",
+        success: "success group border-green-600 bg-green-500 text-white",
+        warning: "warning group border-yellow-600 bg-yellow-500 text-black"
+         
       },
+      position: {       
+        top: "fixed top-5 left-1/2 transform -translate-x-1/2 w-auto flex justify-center z-50 bottom-auto !right-auto",
+        "top-left": "fixed top-5 left-5 z-50  w-auto",
+        "top-right": "fixed top-5 right-5 z-50  w-auto ",
+        bottom: "fixed bottom-5 left-1/2 transform -translate-x-1/2 z-50 w-auto",
+        "bottom-left": "fixed bottom-5 left-5 z-50  w-auto ",
+        "bottom-right": "fixed bottom-5 right-5 z-50  w-auto ",
+        center: "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2   z-50  w-auto "
+      }
     },
     defaultVariants: {
       variant: "default",
@@ -44,11 +57,11 @@ const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+>(({ className, variant, position, ...props }, ref) => {
   return (
     <ToastPrimitives.Root
       ref={ref}
-      className={cn(toastVariants({ variant }), className)}
+      className={cn(toastVariants({ variant, position }),  className)}
       {...props}
     />
   )
