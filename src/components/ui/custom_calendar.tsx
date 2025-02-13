@@ -82,7 +82,7 @@ function Calendar({
           <ChevronRight className={cn("h-4 w-4", className)} {...props} />
         ),
         Dropdown:(dropdownProps)=>{
-          console.log(dropdownProps);
+         // 1.log(dropdownProps);
           const {currentMonth, goToMonth} =useNavigation();
           const {fromYear, fromMonth, fromDate, toYear, toMonth, toDate}  =useDayPicker();
 

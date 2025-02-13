@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,6 +36,8 @@ import { Calendar } from "@/components/ui/custom_calendar";
 import { format } from "date-fns"
 import { ko } from "date-fns/locale";  // ✅ 한국어 로케일 추가
 import { PasswordInput } from "@/components/ui/password-input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 
 
@@ -42,8 +45,8 @@ import { PasswordInput } from "@/components/ui/password-input";
 const formSchema = z.object({
   email: z.string().email("유효한 이메일을 입력하세요."),
   accountType: z.enum(["personal", "company"]),
-  companyName: z.string().optional(),
-  numberOfEmployees: z.coerce.number().optional(),
+  companyName: z.string({ required_error: "기업명을 입력해주세요." }).optional(),
+  numberOfEmployees: z.coerce.number({ required_error: "직원수를 입력해주세요." }).optional(),  
   dob:z.date({ required_error: "생년월일을 선택해주세요." }).refine((date)=>{
     const today = new Date();
     const eighteedYearsAgo =new Date(
@@ -59,29 +62,44 @@ const formSchema = z.object({
   },"비밀번호는 특수문자 1개 이상, 대문자 1개 이상을 포함해야 합니다."),
 
   passwordConfirm: z.string({ required_error: "비밀번호 확인을 입력해 주세요." }),
+  acceptTerms: z.boolean({required_error: "이용약관에 동의해야 합니다."})
+  //.refine((checked) => checked, "You must accept the terms and conditions"),  
+
 }).superRefine((data, ctx) => {
- 
-  if(data.accountType === "company" && !data.companyName) {
+  // 1️⃣ 기업 계정인 경우 기업명과 직원 수 먼저 확인
+  if (data.accountType === "company") {
+    if (!data.companyName) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["companyName"],
+        message: "기업명을 입력해주세요.",
+      });
+    }
+
+    if (!data.numberOfEmployees || data.numberOfEmployees < 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["numberOfEmployees"],
+        message: "직원수를 입력해주세요.",
+      });
+    }
+  }
+
+  // 2️⃣ 비밀번호 확인 필드 체크
+  if (data.password !== data.passwordConfirm) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      path:["companyName"],
-      message: "기업명을 입력해주세요.",
+      path: ["passwordConfirm"],
+      message: "비밀번호와 비밀번호 확인은 일치해야 합니다.",
     });
   }
 
-  if(data.accountType === "company" && (!data.numberOfEmployees  || data.numberOfEmployees < 1 )) {
+  // 3️⃣ 이용약관 동의 마지막에 체크
+  if (!data.acceptTerms) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      path:["numberOfEmployees"],
-      message: "직원수를 입력해주세요.",
-    });
-  }
-
-  if(data.password !== data.passwordConfirm) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path:["passwordConfirm"],
-      message: "비밀번호와 비밀번호 확인은 일치해야 하겠습니다.",
+      path: ["acceptTerms"],
+      message: "이용약관에 동의해야 합니다.",
     });
   }
 });
@@ -91,12 +109,15 @@ const formSchema = z.object({
 
 
 const SignupPage: React.FC = () => {
+  const router =useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       accountType: "personal", 
       dob: undefined,
+      companyName: "",
+      //numberOfEmployees: 0,
       password: "", 
       passwordConfirm: "",
     },
@@ -105,6 +126,7 @@ const SignupPage: React.FC = () => {
   // 회원가입 핸들러
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
     console.log("회원가입 확인이 통과되었습니다.", data);
+    //router.push("/dashboard");
   };
 
 
@@ -138,7 +160,7 @@ const SignupPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>이메일</FormLabel>
                     <FormControl>
-                      <Input placeholder="example@email.com" {...field} />
+                      <Input placeholder="example@email.com" required {...field} />
                     </FormControl>
                     {/* <FormDescription>
                       Macaronics.net 계정의 이메일을 입력해주세요.
@@ -192,7 +214,10 @@ const SignupPage: React.FC = () => {
                       <FormItem>
                         <FormLabel>직원수</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="직원수를 입력해주세요." {...field}  min={1}   />
+                          <Input type="number" placeholder="직원수를 입력해주세요." {...field} 
+                            min={0} 
+                            value={field.value ?? ""}
+                          />
                         </FormControl>                        
                         <FormMessage />
                       </FormItem>
@@ -236,7 +261,7 @@ const SignupPage: React.FC = () => {
                             toDate={new Date()}
                             captionLayout="dropdown-buttons"
                             locale={ko}  // ✅ 한국어 적용
-                           
+                            required
                           /> 
                         </PopoverContent>
                       </Popover>
@@ -260,7 +285,7 @@ const SignupPage: React.FC = () => {
                     <FormLabel>비밀번호</FormLabel>
                     <FormControl>
                       {/* <Input placeholder="비밀번호" type="password" {...field} /> */}
-                      <PasswordInput  placeholder="비밀번호"  {...field} />
+                      <PasswordInput  placeholder="비밀번호" required  {...field} />
                     </FormControl>                   
                     <FormMessage />
                   </FormItem>
@@ -276,7 +301,7 @@ const SignupPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>비밀번호 확인</FormLabel>
                     <FormControl>                      
-                      <PasswordInput  placeholder="비밀비밀번호 확인"  {...field} />
+                      <PasswordInput  placeholder="비밀비밀번호 확인" required  {...field} />
                     </FormControl>                   
                     <FormMessage />
                   </FormItem>
@@ -284,6 +309,35 @@ const SignupPage: React.FC = () => {
             />
 
 
+
+            {/* 이용약관 체크 박스 */}
+            <FormField
+                control={form.control}
+                name="acceptTerms"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex gap-2 items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel>이용약관에 동의합니다.</FormLabel>
+                    </div>
+                    <FormDescription>
+                      회원 가입을 위해 약관 동의는 필수 입니다.{" "}
+                      <Link
+                        href="/terms"
+                        className="text-primary hover:underline"
+                      >
+                       이용 약관
+                      </Link>
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
 
               {/* 회원가입 버튼 */}
