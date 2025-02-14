@@ -38,6 +38,8 @@ import { ko } from "date-fns/locale";  // ✅ 한국어 로케일 추가
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/custom-use-toast";
+import { ToastAction } from "@/components/ui/custom-toast";
 
 
 
@@ -109,6 +111,7 @@ const formSchema = z.object({
 
 
 const SignupPage: React.FC = () => {
+  const { toast } = useToast();
   const router =useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -126,7 +129,27 @@ const SignupPage: React.FC = () => {
   // 회원가입 핸들러
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
     console.log("회원가입 확인이 통과되었습니다.", data);
-    //router.push("/dashboard");
+    
+    toast({
+      variant: "default",
+      position: "top",
+      description: "🎊 회원 가입을 축하 합니다.",
+      duration: 5000, // ✅ 5초 후 토스트가 사라짐
+      action: (
+        <ToastAction
+          altText="확인"
+          onClick={() => router.push("/dashboard")} // ✅ 확인 버튼 클릭 시 이동
+        >
+          확인
+        </ToastAction>
+      ),
+    });
+
+    // ✅ 토스트가 사라진 후 5.2초 후 이동 (여유 시간 추가)
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 5200);
+
   };
 
 

@@ -19,10 +19,14 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
-  return (
+  const [open, setOpen] = React.useState(true) // 캘린더 열림/닫힘 상태
+
+  return open ?(
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
+      onDayClick={() => setOpen(false)}
+     
       modifiers={{
         saturday: (date) => date.getDay() === 6, // 토요일
         sunday: (date) => date.getDay() === 0, // 일요일
@@ -75,6 +79,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
+      
         IconLeft: ({ className, ...props }) => (
           <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
         ),
@@ -147,7 +152,8 @@ function Calendar({
       }}
       {...props}
     />
-  )
+  ) :null;
+
 }
 Calendar.displayName = "Calendar"
 

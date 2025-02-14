@@ -1,7 +1,7 @@
 "use client";
 import ThemeProvider from "@/components/theme-provider";
 import React from "react";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/custom-toaster";
 
 interface ProvidersProps {
   children: React.ReactNode;
