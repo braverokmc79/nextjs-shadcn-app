@@ -19,7 +19,7 @@ const MenuItem:React.FC<MenuItemProps> = ({children, href}) => {
     <Link href={href} 
         className={cn("block p-2 hover:bg-white dark:hover:bg-zinc-700  rounded-md text-muted-foreground  text-sm font-medium",
                         isActive && 
-                        "bg-primary hover:bg-primary dark:hover:bg-primary hover:text-foreground text-white")}
+                        "bg-primary hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground text-primary-foreground ")}
                       >
         {children}
     </Link>
