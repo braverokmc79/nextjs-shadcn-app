@@ -21,6 +21,11 @@ const LandingPage: React.FC = () => {
         <Button asChild variant="outline">
           <Link href="/sign-up">회원가입</Link>
         </Button>
+
+
+        <Button  variant="outline" className="bg-pink-500 text-white hover:bg-pink-600 hover:text-white">
+          <Link href="/dashboard">대시보드</Link>
+        </Button>
       </div>
     </>
   );
