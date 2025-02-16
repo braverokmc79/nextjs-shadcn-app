@@ -1,10 +1,11 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {  AlertTriangleIcon, BadgeCheckIcon, PartyPopperIcon, UserCheck2Icon, UserIcon, UserRoundIcon } from 'lucide-react';
+import {  AlertTriangleIcon, BadgeCheckIcon, LaptopIcon, PartyPopperIcon, UserCheck2Icon, UserIcon, UserRoundIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
+import WorkLocationTrends from './work-location-trends';
 
 
 const EmployeesStats:React.FC = () => {
@@ -13,6 +14,8 @@ const EmployeesStats:React.FC = () => {
   const employeesPresentPercentage = (employeesPresent / totalEmployees) * 100;
 
   return (
+
+    <>
     <div className='grid lg:grid-cols-3 gap-4'>
         <Card>
             <CardHeader className='pb-2'>
@@ -77,6 +80,22 @@ const EmployeesStats:React.FC = () => {
             </CardFooter>      
         </Card>
     </div>
+
+
+    <Card className='my-4'>
+        <CardHeader>
+            <CardTitle className='text-base'> 
+                <LaptopIcon />
+                <span>직원 근무지 동향</span>
+            </CardTitle> 
+        </CardHeader>
+        <CardContent>
+                <WorkLocationTrends />
+        </CardContent>          
+    </Card>
+
+    
+  </>
   )
 }
 

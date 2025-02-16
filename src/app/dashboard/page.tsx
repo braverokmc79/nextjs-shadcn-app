@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import React from "react";
-import EmployeesStats from "./components/employees-stats";
+import EmployeesStats from "./components/employees/employees-stats";
 
 const DashboardPage: React.FC = () => {
   return (
