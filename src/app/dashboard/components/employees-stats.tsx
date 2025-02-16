@@ -1,8 +1,11 @@
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {  AlertTriangleIcon, BadgeCheckIcon, UserCheck2Icon, UserIcon, UserRoundIcon } from 'lucide-react';
+import {  AlertTriangleIcon, BadgeCheckIcon, PartyPopperIcon, UserCheck2Icon, UserIcon, UserRoundIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
+
 
 const EmployeesStats:React.FC = () => {
   const totalEmployees = 100;
@@ -57,10 +60,21 @@ const EmployeesStats:React.FC = () => {
         </Card>
 
 
-        <Card className='border-pink-500'>
+        <Card className='border-pink-500 flex flex-col'>
             <CardHeader className='pb-2'>
                 <CardTitle className='text-base'> 이달의 직원</CardTitle> 
-            </CardHeader>    
+            </CardHeader>
+            <CardContent className='flex gap-2 items-center'>
+                <Avatar>
+                    <Image src="/images/tw.png"  alt="이달의 직원 아바타" width={40} height={40} />
+                    <AvatarFallback>CM</AvatarFallback>
+                </Avatar>
+                <span>이달의 직원</span>
+            </CardContent>  
+            <CardFooter className='flex gap-2 items-center text-xs text-muted-foreground mt-auto'>
+                    <PartyPopperIcon className='text-pink-500' />    
+                    <span>홍길동님! 축하합니다</span>
+            </CardFooter>      
         </Card>
     </div>
   )
