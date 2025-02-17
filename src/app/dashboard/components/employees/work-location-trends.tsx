@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
 const data = [
   { name: "1월", office: 82, wfh: 44 },
@@ -17,35 +17,34 @@ const data = [
   { name: "12월", office: 50, wfh: 50 },
 ];
 
+const fontStyle = {
+  fontFamily: "'Noto Sans KR', sans-serif",
+  fontSize: "14px",
+  fill: "#fff",
+};
+
 const WorkLocationTrends: React.FC = () => {
-  const fontStyle = {
-    fontFamily: "'Noto Sans KR', sans-serif",
-    fontSize: "14px",
-    fill: "#fff",
-  };
-
   return (
-    <ResponsiveContainer height={350} width={"100%"}>
-      <BarChart data={data}>
-        <XAxis dataKey="name" stroke="#888888" tick={{ ...fontStyle }} />
-        <YAxis stroke="#888888" tick={{ ...fontStyle }} />
+    <ResponsiveContainer height={350} width="100%">
+      <BarChart data={data} className="[&_.recharts-tooltip-cursor]:fill-gray-300 dark:[&_.recharts-tooltip-cursor]:fill-gray-800">
+        <XAxis dataKey="name" stroke="#888" tick={{ ...fontStyle }} />
+        <YAxis stroke="#888" tick={{ ...fontStyle }} />
         <Tooltip
-        contentStyle={{ fontFamily: "'Noto Sans KR', sans-serif" }}
-        formatter={(value, name, props) => {
-            if (Array.isArray(props?.payload)) {
-            const barEntry = props.payload.find((entry) => entry.dataKey === name);
-            if (barEntry) {
-                const translatedName = name === "office" ? "사무실 근무" : "재택 근무";
-                return [value, translatedName];
-            }
-            }
-            return [value, name]; // 기본적으로 원래 값 반환
-        }}
+          cursor={{ fill: "transparent" }}
+          separator=": "
+          wrapperClassName="!text-sm dark:!bg-black !bg-white !text-black dark:!text-white 
+          !         rounded-md dark:!border-gray-700 border-gray-300"
+          labelFormatter={(label) => `📅 ${label}`}
+          formatter={(value, name) => {
+            return name === "office" ? [value, "사무실 근무"] : [value, "재택 근무"];
+          }}
         />
-
-
+        <Legend
+          iconType="circle"
+          formatter={(value) => (value === "office" ? "사무실 근무" : "재택 근무")}
+        />
         <Bar dataKey="office" stackId="1" fill="#ec4889" name="사무실 근무" />
-        <Bar dataKey="wfh" stackId="2" fill="#6b7280" radius={[4, 4, 0, 0]}   name="재택 근무" />
+        <Bar dataKey="wfh" stackId="1" fill="#6b7280" radius={[4, 4, 0, 0]} name="재택 근무" />
       </BarChart>
     </ResponsiveContainer>
   );
