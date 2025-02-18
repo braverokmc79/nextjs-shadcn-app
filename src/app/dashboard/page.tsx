@@ -2,6 +2,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import React from "react";
 import EmployeesStats from "./components/employees/employees-stats";
+import TeamsStats from "./components/teams/teams-stats";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const DashboardPage: React.FC = () => {
 
       <TabsContent value="teams">
           <h2>팀 상태</h2>
+          <TeamsStats />
       </TabsContent>
     </Tabs>
   );
