@@ -4,10 +4,16 @@ import MenuItem from "./menu-item";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import {cn} from "@/lib/utils";
 
-const MainMenu: React.FC = () => {
+interface MainMenuProps {
+  className?: string; 
+}
+
+const MainMenu: React.FC<MainMenuProps> = ({className}) => {
   return (
-    <nav className="bg-muted overflow-auto p-4 flex flex-col h-full">
+    <nav className={cn(`bg-muted overflow-auto p-4 flex flex-col`,className)}  >
+
       <header className="border-b dark:border-b-black border-b-zinc-300  pb-4">
         <MenuTitle />
       </header>
