@@ -1,8 +1,18 @@
 import React from 'react'
+import { setTimeout } from 'timers/promises';
 
-const EmployeePage = () => {
+
+const EmployeePage:React.FC = async() => {
+  
+  await setTimeout(5000);
+
+
+
   return (
-    <div><h2>employee</h2></div>
+    <div>
+      <h2>직원</h2>
+    
+    </div>
   )
 }
 
