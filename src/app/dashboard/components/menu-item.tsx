@@ -1,9 +1,10 @@
 "use client";
 
+import { DrawerContext } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { useContext } from 'react'
 
 
 interface MenuItemProps {
@@ -12,12 +13,14 @@ interface MenuItemProps {
 }
 
 const MenuItem:React.FC<MenuItemProps> = ({children, href}) => {
+  const {onClose} = useContext(DrawerContext);
+
   const pathname=usePathname();
   const isActive = pathname === href;
 
   return (
     <li>
-      <Link href={href} 
+      <Link href={href}  onClick={onClose}
           className={cn("block p-2 hover:bg-white dark:hover:bg-zinc-700  rounded-md text-muted-foreground  text-sm font-medium",
                           isActive && 
                           "bg-primary hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground text-primary-foreground ")}

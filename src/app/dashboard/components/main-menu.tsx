@@ -8,9 +8,10 @@ import {cn} from "@/lib/utils";
 
 interface MainMenuProps {
   className?: string; 
+  setMobileMenuOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const MainMenu: React.FC<MainMenuProps> = ({className}) => {
+const MainMenu: React.FC<MainMenuProps> = ({className, setMobileMenuOpen}) => {
   return (
     <nav className={cn(`bg-muted overflow-auto p-4 flex flex-col`,className)}  >
 
@@ -19,12 +20,13 @@ const MainMenu: React.FC<MainMenuProps> = ({className}) => {
       </header>
 
       <ul className="py-4 grow flex flex-col gap-1">
-        <MenuItem href="/dashboard">대시보드</MenuItem>
+        <MenuItem href="/dashboard" >대시보드</MenuItem>
         <MenuItem href="/dashboard/teams">팀</MenuItem>
         <MenuItem href="/dashboard/employee">직원</MenuItem>
         <MenuItem href="/dashboard/account">시용자정보</MenuItem>
         <MenuItem href="/dashboard/settings">설정</MenuItem>
       </ul>
+
 
       <footer className="flex gap-2 items-center">
         <Avatar>
