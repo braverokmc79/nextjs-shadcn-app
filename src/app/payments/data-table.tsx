@@ -26,6 +26,8 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 import { DataTablePagination } from "./DataTablePagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FormControl } from "@/components/ui/form"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -35,12 +37,18 @@ interface DataTableProps<TData, TValue> {
   totalCount: number
   setPage: (page: number) => void
   setPageSize: (pageSize: number) => void
+  searchType: string
+  keyword: string
+  setSearchType: (searchType: string) => void
+  setKeyword: (keyword: string) => void
 }
+
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  page, pageSize, totalCount,setPage,setPageSize
+  page, pageSize, totalCount,setPage,setPageSize,
+  searchType, keyword, setSearchType, setKeyword
 }: DataTableProps<TData, TValue>) {
  
   const [sorting, setSorting] = useState<SortingState>([])
@@ -73,15 +81,27 @@ export function DataTable<TData, TValue>({
   return (
     <div>
         
-        <div className="flex items-center py-4">
+        <div className="flex items-center py-4">    
+          <div className="w-6/12  grid grid-cols-[30%_1fr]">
+          <Select onValueChange={setSearchType} value={searchType}>
+            <SelectTrigger>
+              <SelectValue placeholder="검색 타입을 선택해 주세요." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="manager">Manager</SelectItem>
+              <SelectItem value="employee">Employee</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Input
-            placeholder="팀명 검색"
-            value={(table.getColumn("teamName")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("teamName")?.setFilterValue(event.target.value)
-            }
+            type="search"
+            placeholder="검색"
+            value={keyword}
+            onChange={(event) =>setKeyword(event.target.value)}
             className="max-w-sm"
           />
+        </div>     
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

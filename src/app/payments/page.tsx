@@ -5,9 +5,10 @@ import { Employee, columns } from "./columns";
 import { DataTable } from "./data-table";
 import { useState, useEffect } from "react";
 
-async function getData(page: number, pageSize: number): Promise<{ data: Employee[], totalCount: number }> {  
+async function getData(page: number, pageSize: number, searchType: string = "", keyword: string = ""):
+    Promise<{ data: Employee[], totalCount: number }> {  
   console.log("getData", page, pageSize);
-  const response = await fetch(`/api/employees?page=${page}&pageSize=${pageSize}`);
+  const response = await fetch(`/api/employees?page=${page}&pageSize=${pageSize}&searchType=${searchType}&keyword=${keyword}`);
   return response.json();
 }
 
@@ -18,18 +19,23 @@ export default function DemoPage() {
 
   const [page, setPage] = useState(pageFromParams);
   const [pageSize, setPageSize] = useState(pageSizeFromParams);
+  const [searchType, setSearchType] = useState("");
+  const [keyword, setKeyword] = useState("");
+
   const [data, setData] = useState<Employee[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+
+
   useEffect(() => {
     setLoading(true);    
-    getData(page, pageSize).then(({ data, totalCount }) => {
+    getData(page,pageSize, searchType, keyword).then(({ data, totalCount }) => {
       setData(data);
       setTotalCount(totalCount);
       setLoading(false);
     });
-  }, [page,pageSize]);
+  }, [page,pageSize,searchType, keyword]);
 
   if (loading) return <div className="text-center">Loading...</div>;
 
@@ -41,7 +47,11 @@ export default function DemoPage() {
                 totalCount={totalCount} 
                 setPage={setPage} 
                 setPageSize={setPageSize}
-                />
+                searchType={searchType}
+                keyword={keyword}
+                setSearchType={setSearchType}
+                setKeyword={setKeyword}
+          />
     </div>
   );
 }

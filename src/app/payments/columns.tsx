@@ -26,8 +26,6 @@ export type Employee={
     avatar?: undefined | string;
 }
 
-
-
 export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "id",
@@ -51,7 +49,6 @@ export const columns: ColumnDef<Employee>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-
   
   {
     accessorKey: "firstName",
@@ -105,5 +102,5 @@ export const columns: ColumnDef<Employee>[] = [
       );
     },
   },
-  // ...
+
 ];
