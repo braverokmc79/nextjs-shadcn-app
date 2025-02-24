@@ -1,13 +1,16 @@
 "use client";
 import ThemeProvider from "@/components/theme-provider";
-import React from "react";
+import React, { useState } from "react";
 import { Toaster } from "@/components/ui/custom-toaster";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 interface ProvidersProps {
   children: React.ReactNode;
 }
 
 const Providers: React.FC<ProvidersProps> = ({ children }) => {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <ThemeProvider
       attribute="data-theme"
@@ -15,7 +18,9 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>;     
       <Toaster />
     </ThemeProvider>
   );

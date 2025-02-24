@@ -27,14 +27,36 @@ export const GET = async (request: Request) => {
   // ✅ `page`와 `pageSize`를 URL에서 가져오기
   const page = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("pageSize")) || 5;
+  const searchType = searchParams.get("searchType") || "";
+  const keyword = searchParams.get("keyword") || "";
+
+  const filteredEmployees = employees.filter((employee) => {
+    if (searchType === "firstName") {
+      return employee.firstName.toLowerCase().includes(keyword.toLowerCase());
+    }
+    if (searchType === "teamName") {
+      return employee.teamName.toLowerCase().includes(keyword.toLowerCase()); // ✅ 올바른 필드 사용
+    }
+    if (searchType === "all") {
+      return (
+        employee.firstName.toLowerCase().includes(keyword.toLowerCase()) ||
+        employee.teamName.toLowerCase().includes(keyword.toLowerCase())
+      );
+    }
+  
+    return true; // 기본적으로 모든 직원 포함
+  });
+  
+  console.log("filteredEmployees   :",filteredEmployees);
 
   // ✅ 데이터 슬라이싱 (페이지네이션 적용)
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const paginatedData = employees.slice(startIndex, endIndex);
+  const paginatedData = filteredEmployees.slice(startIndex, endIndex);
 
-  console.log("GET  page 파라미터 ",searchParams.get("page"));
+  console.log("GET  page 파라미터 ",searchParams.get("page"), searchType, keyword);
   console.log("GET data 페이지와 페이지 사이즈: ",page, pageSize);
+  console.log("GET paginatedData: ",paginatedData);
 
   return NextResponse.json({
     status: 200,
@@ -42,6 +64,6 @@ export const GET = async (request: Request) => {
     message: "success",
     page,
     pageSize,
-    totalCount: employees.length
+    totalCount: filteredEmployees.length
   });
 };

@@ -60,7 +60,7 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className="flex w-[150px] items-center justify-center text-sm font-medium">
-          페이지 {currentPage + 1} / 총 {pageCount}
+          페이지 {page} / 총 {pageCount}
         </div>
         <div className="flex items-center space-x-1">
           <Button

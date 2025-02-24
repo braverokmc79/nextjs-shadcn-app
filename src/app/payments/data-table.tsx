@@ -28,8 +28,10 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { DataTablePagination } from "./DataTablePagination";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FormControl } from "@/components/ui/form"
+import { useDebounce } from "@/hooks/useDebounce"
 
 interface DataTableProps<TData, TValue> {
+  isLoading: boolean
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   page: number
@@ -41,14 +43,19 @@ interface DataTableProps<TData, TValue> {
   keyword: string
   setSearchType: (searchType: string) => void
   setKeyword: (keyword: string) => void
+  handleSearch: () => void
+  handleKeywordChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 
 export function DataTable<TData, TValue>({
+  isLoading,
   columns,
   data,
   page, pageSize, totalCount,setPage,setPageSize,
-  searchType, keyword, setSearchType, setKeyword
+  searchType, keyword, setSearchType, setKeyword, handleSearch,
+  handleKeywordChange,handleKeyDown
 }: DataTableProps<TData, TValue>) {
  
   const [sorting, setSorting] = useState<SortingState>([])
@@ -56,6 +63,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
 
+ 
   const table = useReactTable({
     data,
     columns,
@@ -82,26 +90,38 @@ export function DataTable<TData, TValue>({
     <div>
         
         <div className="flex items-center py-4">    
-          <div className="w-6/12  grid grid-cols-[30%_1fr]">
-          <Select onValueChange={setSearchType} value={searchType}>
-            <SelectTrigger>
-              <SelectValue placeholder="검색 타입을 선택해 주세요." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="manager">Manager</SelectItem>
-              <SelectItem value="employee">Employee</SelectItem>
-            </SelectContent>
-          </Select>
+          
+        <div className="w-6/12 grid grid-cols-[30%_60%_1fr] gap-2">
+            <Select onValueChange={setSearchType} value={searchType}>
+              <SelectTrigger>
+                <SelectValue placeholder="검색 타입을 선택해 주세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">전체</SelectItem>
+                <SelectItem value="firstName">성명</SelectItem>
+                <SelectItem value="teamName">팀명</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Input
-            type="search"
-            placeholder="검색"
-            value={keyword}
-            onChange={(event) =>setKeyword(event.target.value)}
-            className="max-w-sm"
-          />
-        </div>     
+            <Input
+              type="search"
+              placeholder="검색"
+              value={keyword}
+              onChange={(event) => handleKeywordChange(event)}
+              onKeyDown={(event) => handleKeyDown(event)}
+              className="max-w-sm"
+            />
+
+            <Button
+              variant="default"
+              className="ml-auto bg-blue-600 text-white hover:bg-blue-700 transition-all"
+              onClick={handleSearch}
+            >
+              검색
+            </Button>
+          </div>
+
+
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -144,7 +164,7 @@ export function DataTable<TData, TValue>({
         <div className="rounded-md border">
 
 
-        <Table>
+       {!isLoading && <Table>
             <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -186,6 +206,7 @@ export function DataTable<TData, TValue>({
             )}
             </TableBody>
         </Table>
+}
         </div>
         
         
