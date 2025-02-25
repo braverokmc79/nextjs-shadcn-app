@@ -19,10 +19,10 @@ const fetchPayments= async ({ queryKey }: { queryKey: any }) => {
   return response.json();
 };
 
-export default function DemoPage() {
+export default function PaymentsPage() {
   const searchParams = useSearchParams();
   const pageFromParams = Number(searchParams.get("page")) || 1;
-  const pageSizeFromParams = Number(searchParams.get("pageSize")) || 5;
+  const pageSizeFromParams = Number(searchParams.get("pageSize")) || 1;
 
   const [page, setPage] = useState(pageFromParams);
   const [pageSize, setPageSize] = useState(pageSizeFromParams);
