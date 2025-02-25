@@ -25,14 +25,15 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-import { DataTablePagination } from "./DataTablePagination";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FormControl } from "@/components/ui/form"
-import { useDebounce } from "@/hooks/useDebounce"
+import PaymentsLoading from "../loading"
+import { DataTablePagination } from "@/components/data-table-pagination"
 
 interface DataTableProps<TData, TValue> {
   isLoading: boolean
-  columns: ColumnDef<TData, TValue>[]
+  error: any
+  paymentsColumns: ColumnDef<TData, TValue>[]
   data: TData[]
   page: number
   pageSize: number
@@ -49,9 +50,10 @@ interface DataTableProps<TData, TValue> {
 }
 
 
-export function DataTable<TData, TValue>({
+export function PaymentsDataTable<TData, TValue>({
   isLoading,
-  columns,
+  error,
+  paymentsColumns,
   data,
   page, pageSize, totalCount,setPage,setPageSize,
   searchType, keyword, setSearchType, setKeyword, handleSearch,
@@ -66,7 +68,7 @@ export function DataTable<TData, TValue>({
  
   const table = useReactTable({
     data,
-    columns,
+    columns: paymentsColumns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -131,11 +133,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
 
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
+            {table.getAllColumns().filter((column) => column.getCanHide())
               .map((column) => {
                 return (
                   <DropdownMenuCheckboxItem
@@ -156,13 +154,20 @@ export function DataTable<TData, TValue>({
 
         </div>
 
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div className="flex-1 text-sm text-muted-foreground mb-5">
         {table.getFilteredRowModel().rows.length} 중{" "}
         {table.getFilteredSelectedRowModel().rows.length} 행이 선택되었습니다.
         </div>
         
-        <div className="rounded-md border">
+        <div className="rounded-md border ">
 
+
+    
+
+
+       {isLoading && (
+        <PaymentsLoading />
+      )}
 
        {!isLoading && <Table>
             <TableHeader>
@@ -199,8 +204,12 @@ export function DataTable<TData, TValue>({
                 ))
             ) : (
                 <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                   데이터가 없습니다.
+                <TableCell colSpan={paymentsColumns.length} className="h-24 text-center">
+
+                 {error ? <div className="text-center text-red-500">데이터를 불러오는 중 오류가 발생했습니다.</div>
+                  :"데이터가 없습니다."                 
+                 }
+                   
                 </TableCell>
                 </TableRow>
             )}
@@ -211,15 +220,20 @@ export function DataTable<TData, TValue>({
         
         
         
-       <div className="flex items-center justify-end space-x-2 py-4">
-      
-
-       <DataTablePagination 
-         table={table}
-          page={page} 
-          pageSize={pageSize} totalCount={totalCount} setPage={setPage} setPageSize={setPageSize} />
-
-        </div>
+           
+        <DataTablePagination 
+              position="right"
+              table={table}
+              page={page} 
+              pageSize={pageSize} 
+              totalCount={totalCount} 
+              setPage={setPage} 
+              setPageSize={setPageSize}
+              selectText={true}
+              displayText={true}
+              totalCountText={true}  
+         />
+        
  </div>
   )
 }

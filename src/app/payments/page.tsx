@@ -1,16 +1,16 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
+import { PaymentsDataTableColumns } from "./components/payments-data-table-columns";
+import { PaymentsDataTable } from "./components/payments-data-table";
 import { useState, useCallback } from "react";
 import { toast } from "@/hooks/custom-use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
 
-const fetchEmployees = async ({ queryKey }: { queryKey: any }) => {
+const fetchPayments= async ({ queryKey }: { queryKey: any }) => {
   const [, page, pageSize, searchType, keyword] = queryKey;
-  const queryString = `/api/employees?page=${page}&pageSize=${pageSize}&searchType=${searchType}&keyword=${keyword}`;
+  const queryString = `/api/payments?page=${page}&pageSize=${pageSize}&searchType=${searchType}&keyword=${keyword}`;
   
   const response = await fetch(queryString);
   if (!response.ok) {
@@ -36,7 +36,7 @@ export default function DemoPage() {
   // ✅ React Query로 데이터 가져오기
   const { data, error, isFetching } = useQuery({
     queryKey: ["employees", page, pageSize, searchType, debouncedKeyword],
-    queryFn: fetchEmployees,
+    queryFn: fetchPayments,
     staleTime: 15000, // 15초 동안 캐시 유지
     refetchOnWindowFocus: false, // 포커스 시 자동 리패치 방지
   });
@@ -82,15 +82,14 @@ export default function DemoPage() {
     setPage(1);
   }, []);
 
-  if (error) return <div className="text-center text-red-500">데이터를 불러오는 중 오류가 발생했습니다.</div>;
-
 
   return (
     <div className="container mx-auto py-10">
 
-    <DataTable 
+    <PaymentsDataTable 
         isLoading={isFetching} 
-        columns={columns} 
+        error={error}
+        paymentsColumns={PaymentsDataTableColumns} 
         data={data?.data || []} 
         page={page} 
         pageSize={pageSize} 

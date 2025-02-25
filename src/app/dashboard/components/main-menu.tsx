@@ -25,6 +25,7 @@ const MainMenu: React.FC<MainMenuProps> = ({className, setMobileMenuOpen}) => {
         <MenuItem href="/dashboard/employee">직원</MenuItem>
         <MenuItem href="/dashboard/account">시용자정보</MenuItem>
         <MenuItem href="/dashboard/settings">설정</MenuItem>
+        <MenuItem href="/payments">결제</MenuItem>
       </ul>
 
 

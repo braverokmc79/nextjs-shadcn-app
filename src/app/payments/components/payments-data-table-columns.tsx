@@ -1,8 +1,6 @@
 "use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,11 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox"
-import { DataTableColumnHeader } from "./DataTableColumnHeader";
+import { PaymentsDataTableColumnHeader } from "./payments-data-table-column-header";
 
 
-
-export type Employee={
+export type PaymentsType={
     id: number | string;
     firstName: string;
     lastName: string;
@@ -26,7 +23,7 @@ export type Employee={
     avatar?: undefined | string;
 }
 
-export const columns: ColumnDef<Employee>[] = [
+export const PaymentsDataTableColumns: ColumnDef<PaymentsType>[] = [
   {
     accessorKey: "id",
     header: ({ table }) => (
@@ -53,7 +50,7 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "firstName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="성명" />
+      <PaymentsDataTableColumnHeader column={column} title="성명" />
     ),
   },
   {
@@ -74,6 +71,7 @@ export const columns: ColumnDef<Employee>[] = [
     accessorKey: "isTeamLeader",
     header: "팀리더",
   },
+
   {
     id: "actions",
     cell: ({ row }) => {
